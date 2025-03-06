@@ -38,12 +38,14 @@ public class GlobalExceptionHandler {
         String code;
         String exceptionType;
         HttpStatus httpStatus;
+        String message;
         ObjectMapper mapper = new ObjectMapper();
         final Map<String, Object> errors = new HashMap<>();
         if (e instanceof IllegalArgumentException) {
             code = "91";
             exceptionType = "IllegalArgumentException";
             httpStatus = HttpStatus.BAD_REQUEST;
+            message = "GENERAL ERROR";
             errors.put("illegalArgumentException", e.getStackTrace()[0].toString());
             try {
                 this.logger.warn("ILLEGAL ARGUMENT EXCEPTION ERROR :", mapper.writeValueAsString(errors));
@@ -54,6 +56,7 @@ public class GlobalExceptionHandler {
             code = "99";
             exceptionType = "Global Error";
             httpStatus = INTERNAL_SERVER_ERROR;
+            message = "INTERNAL SERVER ERROR";
             errors.put("Global Error", e.getStackTrace()[0].toString());
             try {
                 this.logger.warn("GLOBAL ERROR :", mapper.writeValueAsString(errors));
@@ -62,7 +65,7 @@ public class GlobalExceptionHandler {
             }
         }
         this.logger.exception(exceptionType.toUpperCase(), null,e);
-        return ResponseEntityUtil.createErrorResponse(httpStatus, code, "GENERAL ERROR");
+        return ResponseEntityUtil.createErrorResponse(httpStatus, code, message);
     }
 
     @ExceptionHandler({JpaSystemException.class, JDBCException.class})

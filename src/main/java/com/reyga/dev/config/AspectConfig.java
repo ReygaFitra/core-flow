@@ -18,6 +18,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.lang.reflect.Method;
+import java.util.UUID;
 
 @Aspect
 @Component
@@ -42,6 +43,7 @@ public class AspectConfig {
             request = ((ServletRequestAttributes) requestAttributes).getRequest();
         }
 
+        MDC.put(HEADER.REQUEST_ID.getValue(), UUID.randomUUID().toString());
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         RequestLoggingDto requestDto = new RequestLoggingDto();
         LoggingUtil.constructRequestBodyAndRequestMultiPart(joinPoint.getArgs(), method, requestDto);
