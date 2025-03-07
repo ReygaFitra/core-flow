@@ -44,7 +44,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
-    public <RES> RES getWithErrorHandling(String uri, MediaType mediaType, Class<RES> responseType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
+    public <RES> RES getWithErrorHandling(String uri, MediaType mediaType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
         RestClient client = RestClient
                 .builder()
                 .requestFactory(httpComponentsClientHttpRequestFactory)
@@ -164,7 +164,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
-    public <RES> RES deleteWithErrorHandling(String uri, MediaType mediaType, Class<RES> responseType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
+    public <RES> RES deleteWithErrorHandling(String uri, MediaType mediaType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
         RestClient client = RestClient
                 .builder()
                 .requestFactory(httpComponentsClientHttpRequestFactory)
@@ -419,7 +419,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
-    public <RES> RES getWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
+    public <RES> RES getWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
         RestClient client = RestClient
                 .builder()
                 .requestFactory(httpComponentsClientHttpRequestFactory)
@@ -502,7 +502,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
-    public <RES> RES deleteWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
+    public <RES> RES deleteWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
         RestClient client = RestClient
                 .builder()
                 .requestFactory(httpComponentsClientHttpRequestFactory)
