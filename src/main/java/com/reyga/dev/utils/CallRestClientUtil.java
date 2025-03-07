@@ -3,6 +3,7 @@ package com.reyga.dev.utils;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -12,14 +13,18 @@ import java.util.function.Predicate;
 @Component
 public class CallRestClientUtil {
 
-    private final RestClient restClient;
+    private final HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory;
 
-    public CallRestClientUtil(RestClient restClient) {
-        this.restClient = restClient;
+    public CallRestClientUtil(HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory) {
+        this.httpComponentsClientHttpRequestFactory = httpComponentsClientHttpRequestFactory;
     }
 
     public <RES> RES get(String uri, MediaType mediaType, Class<RES> responseType) {
-        return restClient.get()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.get()
                 .uri(uri)
                 .accept(mediaType)
                 .retrieve()
@@ -27,7 +32,11 @@ public class CallRestClientUtil {
     }
 
     public <RES> RES getWithErrorHandling(String uri, MediaType mediaType, Class<RES> responseType, Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
-        return restClient.get()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.get()
                 .uri(uri)
                 .accept(mediaType)
                 .retrieve()
@@ -36,14 +45,22 @@ public class CallRestClientUtil {
     }
 
     public <RES> RES getWithErrorHandling(String uri, MediaType mediaType, Class<RES> responseType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
-        return restClient.get()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.get()
                 .uri(uri)
                 .accept(mediaType)
                 .exchange(fullResponseHandler);
     }
 
     public <RES> RES post(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType, Class<RES> responseType) {
-        return restClient.post()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.post()
                 .uri(uri)
                 .contentType(contentType)
                 .accept(acceptMediaType)
@@ -54,7 +71,11 @@ public class CallRestClientUtil {
 
     public <RES> RES postWithErrorHandling(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType, Class<RES> responseType,
                                           Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
-        return restClient.post()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.post()
                 .uri(uri)
                 .contentType(contentType)
                 .accept(acceptMediaType)
@@ -65,7 +86,11 @@ public class CallRestClientUtil {
     }
 
     public <RES> RES postWithErrorHandling(String uri, MediaType contentType, MediaType acceptMediaType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
-        return restClient.post()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.post()
                 .uri(uri)
                 .contentType(contentType)
                 .accept(acceptMediaType)
@@ -73,7 +98,11 @@ public class CallRestClientUtil {
     }
 
     public <RES> RES put(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType, Class<RES> responseType) {
-        return restClient.put()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.put()
                 .uri(uri)
                 .contentType(contentType)
                 .accept(acceptMediaType)
@@ -84,7 +113,11 @@ public class CallRestClientUtil {
 
     public <RES> RES putWithErrorHandling(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType, Class<RES> responseType,
                                            Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
-        return restClient.put()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.put()
                 .uri(uri)
                 .contentType(contentType)
                 .accept(acceptMediaType)
@@ -95,7 +128,11 @@ public class CallRestClientUtil {
     }
 
     public <RES> RES putWithErrorHandling(String uri, MediaType contentType, MediaType acceptMediaType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
-        return restClient.put()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.put()
                 .uri(uri)
                 .contentType(contentType)
                 .accept(acceptMediaType)
@@ -103,7 +140,11 @@ public class CallRestClientUtil {
     }
 
     public <RES> RES delete(String uri, MediaType mediaType, Class<RES> responseType) {
-        return restClient.delete()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.delete()
                 .uri(uri)
                 .accept(mediaType)
                 .retrieve()
@@ -111,7 +152,11 @@ public class CallRestClientUtil {
     }
 
     public <RES> RES deleteWithErrorHandling(String uri, MediaType mediaType, Class<RES> responseType, Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
-        return restClient.delete()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.delete()
                 .uri(uri)
                 .accept(mediaType)
                 .retrieve()
@@ -120,7 +165,11 @@ public class CallRestClientUtil {
     }
 
     public <RES> RES deleteWithErrorHandling(String uri, MediaType mediaType, Class<RES> responseType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
-        return restClient.get()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.get()
                 .uri(uri)
                 .accept(mediaType)
                 .exchange(fullResponseHandler);
@@ -131,7 +180,11 @@ public class CallRestClientUtil {
      */
 
     public ResponseEntity<Void> getWithBodilessEntity(String uri, MediaType mediaType) {
-        return restClient.get()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.get()
                 .uri(uri)
                 .accept(mediaType)
                 .retrieve()
@@ -139,7 +192,11 @@ public class CallRestClientUtil {
     }
 
     public ResponseEntity<Void> getWithErrorHandlingBodilessEntity(String uri, MediaType mediaType, Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
-        return restClient.get()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.get()
                 .uri(uri)
                 .accept(mediaType)
                 .retrieve()
@@ -148,7 +205,11 @@ public class CallRestClientUtil {
     }
 
     public ResponseEntity<Void> postWithBodilessEntity(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType) {
-        return restClient.post()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.post()
                 .uri(uri)
                 .contentType(contentType)
                 .accept(acceptMediaType)
@@ -159,7 +220,11 @@ public class CallRestClientUtil {
 
     public ResponseEntity<Void> postWithErrorHandlingBodilessEntity(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType,
                                            Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
-        return restClient.post()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.post()
                 .uri(uri)
                 .contentType(contentType)
                 .accept(acceptMediaType)
@@ -170,7 +235,11 @@ public class CallRestClientUtil {
     }
 
     public ResponseEntity<Void> putBodilessEntity(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType) {
-        return restClient.put()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.put()
                 .uri(uri)
                 .contentType(contentType)
                 .accept(acceptMediaType)
@@ -181,7 +250,11 @@ public class CallRestClientUtil {
 
     public ResponseEntity<Void> putWithErrorHandlingBodilessEntity(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType,
                                           Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
-        return restClient.put()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.put()
                 .uri(uri)
                 .contentType(contentType)
                 .accept(acceptMediaType)
@@ -192,7 +265,11 @@ public class CallRestClientUtil {
     }
 
     public ResponseEntity<Void> deleteBodilessEntity(String uri, MediaType mediaType) {
-        return restClient.delete()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.delete()
                 .uri(uri)
                 .accept(mediaType)
                 .retrieve()
@@ -200,7 +277,11 @@ public class CallRestClientUtil {
     }
 
     public ResponseEntity<Void> deleteWithErrorHandlingBodilessEntity(String uri, MediaType mediaType, Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
-        return restClient.delete()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.delete()
                 .uri(uri)
                 .accept(mediaType)
                 .retrieve()
@@ -213,7 +294,11 @@ public class CallRestClientUtil {
      */
 
     public <RES> RES get(String uri, MediaType mediaType, Class<RES> responseType, Map<String, String> headers) {
-        return restClient.get()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.get()
                 .uri(uri)
                 .accept(mediaType)
                 .headers(httpHeaders -> headers.forEach(httpHeaders::set))
@@ -222,7 +307,11 @@ public class CallRestClientUtil {
     }
 
     public <RES> RES post(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType, Class<RES> responseType, Map<String, String> headers) {
-        return restClient.post()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.post()
                 .uri(uri)
                 .contentType(contentType)
                 .accept(acceptMediaType)
@@ -233,7 +322,11 @@ public class CallRestClientUtil {
     }
 
     public <RES> RES put(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType, Class<RES> responseType, Map<String, String> headers) {
-        return restClient.put()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.put()
                 .uri(uri)
                 .contentType(contentType)
                 .accept(acceptMediaType)
@@ -244,7 +337,11 @@ public class CallRestClientUtil {
     }
 
     public <RES> RES delete(String uri, MediaType mediaType, Class<RES> responseType, Map<String, String> headers) {
-        return restClient.delete()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.delete()
                 .uri(uri)
                 .accept(mediaType)
                 .headers(httpHeaders -> headers.forEach(httpHeaders::set))
@@ -253,7 +350,11 @@ public class CallRestClientUtil {
     }
 
     public ResponseEntity<Void> getWithBodilessEntity(String uri, MediaType mediaType, Map<String, String> headers) {
-        return restClient.get()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.get()
                 .uri(uri)
                 .accept(mediaType)
                 .headers(httpHeaders -> headers.forEach(httpHeaders::set))
@@ -262,7 +363,11 @@ public class CallRestClientUtil {
     }
 
     public ResponseEntity<Void> postWithBodilessEntity(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType, Map<String, String> headers) {
-        return restClient.post()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.post()
                 .uri(uri)
                 .contentType(contentType)
                 .accept(acceptMediaType)
@@ -273,7 +378,11 @@ public class CallRestClientUtil {
     }
 
     public ResponseEntity<Void> putWithBodilessEntity(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType, Map<String, String> headers) {
-        return restClient.put()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.put()
                 .uri(uri)
                 .contentType(contentType)
                 .accept(acceptMediaType)
@@ -284,7 +393,11 @@ public class CallRestClientUtil {
     }
 
     public ResponseEntity<Void> deleteWithBodilessEntity(String uri, MediaType mediaType, Map<String, String> headers) {
-        return restClient.delete()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.delete()
                 .uri(uri)
                 .accept(mediaType)
                 .headers(httpHeaders -> headers.forEach(httpHeaders::set))
@@ -293,7 +406,11 @@ public class CallRestClientUtil {
     }
 
     public <RES> RES getWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
-        return restClient.get()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.get()
                 .uri(uri)
                 .headers(httpHeaders -> headers.forEach(httpHeaders::set))
                 .accept(mediaType)
@@ -303,7 +420,11 @@ public class CallRestClientUtil {
     }
 
     public <RES> RES getWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
-        return restClient.get()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.get()
                 .uri(uri)
                 .headers(httpHeaders -> headers.forEach(httpHeaders::set))
                 .accept(mediaType)
@@ -311,7 +432,11 @@ public class CallRestClientUtil {
     }
     public <RES> RES postWithErrorHandling(String uri, Map<String, String> headers, MediaType contentType, MediaType acceptMediaType, Object requestType, Class<RES> responseType,
                                            Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
-        return restClient.post()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.post()
                 .uri(uri)
                 .headers(httpHeaders -> headers.forEach(httpHeaders::set))
                 .contentType(contentType)
@@ -323,7 +448,11 @@ public class CallRestClientUtil {
     }
 
     public <RES> RES postWithErrorHandling(String uri, Map<String, String> headers, MediaType contentType, MediaType acceptMediaType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
-        return restClient.post()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.post()
                 .uri(uri)
                 .headers(httpHeaders -> headers.forEach(httpHeaders::set))
                 .contentType(contentType)
@@ -332,7 +461,11 @@ public class CallRestClientUtil {
     }
     public <RES> RES putWithErrorHandling(String uri, Map<String, String> headers, MediaType contentType, MediaType acceptMediaType, Object requestType, Class<RES> responseType,
                                           Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
-        return restClient.put()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.put()
                 .uri(uri)
                 .headers(httpHeaders -> headers.forEach(httpHeaders::set))
                 .contentType(contentType)
@@ -344,7 +477,11 @@ public class CallRestClientUtil {
     }
 
     public <RES> RES putWithErrorHandling(String uri, Map<String, String> headers, MediaType contentType, MediaType acceptMediaType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
-        return restClient.put()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.put()
                 .uri(uri)
                 .headers(httpHeaders -> headers.forEach(httpHeaders::set))
                 .contentType(contentType)
@@ -352,7 +489,11 @@ public class CallRestClientUtil {
                 .exchange(fullResponseHandler);
     }
     public <RES> RES deleteWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
-        return restClient.delete()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.delete()
                 .uri(uri)
                 .headers(httpHeaders -> headers.forEach(httpHeaders::set))
                 .accept(mediaType)
@@ -362,7 +503,11 @@ public class CallRestClientUtil {
     }
 
     public <RES> RES deleteWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
-        return restClient.get()
+        RestClient client = RestClient
+                .builder()
+                .requestFactory(httpComponentsClientHttpRequestFactory)
+                .build();
+        return client.get()
                 .uri(uri)
                 .headers(httpHeaders -> headers.forEach(httpHeaders::set))
                 .accept(mediaType)
