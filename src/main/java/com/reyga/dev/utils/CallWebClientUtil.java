@@ -95,6 +95,88 @@ public class CallWebClientUtil {
                 .doOnError(onError);
     }
 
+    public <RES> Mono<RES> post(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType) {
+        return webClient.post()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(responseType);
+    }
+
+    public <RES> Mono<RES> postWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType, Predicate<HttpStatusCode> statusError, Function<ClientResponse, Mono<? extends Throwable>> errorHandler) {
+        return webClient.post()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .retrieve()
+                .onStatus(statusError, errorHandler)
+                .bodyToMono(responseType);
+    }
+
+    public <RES> Mono<RES> postWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler) {
+        return webClient.post()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .exchangeToMono(responseHandler);
+    }
+
+    public <RES> Mono<RES> postWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Consumer<? super RES> onSuccess, Consumer<? super Throwable> onError) {
+        return webClient.post()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .exchangeToMono(responseHandler)
+                .doOnSuccess(onSuccess)
+                .doOnError(onError);
+    }
+
+    public <RES> Mono<RES> put(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType) {
+        return webClient.put()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(responseType);
+    }
+
+    public <RES> Mono<RES> putWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType, Predicate<HttpStatusCode> statusError, Function<ClientResponse, Mono<? extends Throwable>> errorHandler) {
+        return webClient.put()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .retrieve()
+                .onStatus(statusError, errorHandler)
+                .bodyToMono(responseType);
+    }
+
+    public <RES> Mono<RES> putWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler) {
+        return webClient.put()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .exchangeToMono(responseHandler);
+    }
+
+    public <RES> Mono<RES> putWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Consumer<? super RES> onSuccess, Consumer<? super Throwable> onError) {
+        return webClient.put()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .exchangeToMono(responseHandler)
+                .doOnSuccess(onSuccess)
+                .doOnError(onError);
+    }
+
     /**
      * Using Map.
      */
@@ -181,6 +263,94 @@ public class CallWebClientUtil {
                 .map(mapFunction);
     }
 
+    public <RES> Mono<RES> postWithMap(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, Function<RES, RES> mapFunction) {
+        return webClient.post()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .retrieve()
+                .bodyToMono(responseType)
+                .map(mapFunction);
+    }
+
+    public <RES> Mono<RES> postWithErrorHandlingAndMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType, Predicate<HttpStatusCode> statusError, Function<ClientResponse, Mono<? extends Throwable>> errorHandler, Function<RES, RES> mapFunction) {
+        return webClient.post()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .retrieve()
+                .onStatus(statusError, errorHandler)
+                .bodyToMono(responseType)
+                .map(mapFunction);
+    }
+
+    public <RES> Mono<RES> postWithErrorHandlingAndMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Function<RES, RES> mapFunction) {
+        return webClient.post()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .exchangeToMono(responseHandler)
+                .map(mapFunction);
+    }
+
+    public <RES> Mono<RES> postWithErrorHandlingAndMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Consumer<? super RES> onSuccess, Consumer<? super Throwable> onError, Function<RES, RES> mapFunction) {
+        return webClient.post()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .exchangeToMono(responseHandler)
+                .doOnSuccess(onSuccess)
+                .doOnError(onError)
+                .map(mapFunction);
+    }
+
+    public <RES> Mono<RES> putWithMap(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, Function<RES, RES> mapFunction) {
+        return webClient.put()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .retrieve()
+                .bodyToMono(responseType)
+                .map(mapFunction);
+    }
+
+    public <RES> Mono<RES> putWithErrorHandlingAndMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType, Predicate<HttpStatusCode> statusError, Function<ClientResponse, Mono<? extends Throwable>> errorHandler, Function<RES, RES> mapFunction) {
+        return webClient.put()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .retrieve()
+                .onStatus(statusError, errorHandler)
+                .bodyToMono(responseType)
+                .map(mapFunction);
+    }
+
+    public <RES> Mono<RES> putWithErrorHandlingAndMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Function<RES, RES> mapFunction) {
+        return webClient.put()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .exchangeToMono(responseHandler)
+                .map(mapFunction);
+    }
+
+    public <RES> Mono<RES> putWithErrorHandlingAndMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Consumer<? super RES> onSuccess, Consumer<? super Throwable> onError, Function<RES, RES> mapFunction) {
+        return webClient.put()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .exchangeToMono(responseHandler)
+                .doOnSuccess(onSuccess)
+                .doOnError(onError)
+                .map(mapFunction);
+    }
+
     /**
      * Using FlatMap.
      */
@@ -261,6 +431,96 @@ public class CallWebClientUtil {
                 .uri(uri)
                 .headers(httpHeaders -> headers.forEach(httpHeaders::set))
                 .accept(mediaType)
+                .exchangeToMono(responseHandler)
+                .doOnSuccess(onSuccess)
+                .doOnError(onError)
+                .flatMap(mapFunction);
+    }
+
+    public <RES> Mono<RES> postWithFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType, Function<RES, Mono<RES>> mapFunction) {
+        return webClient.post()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(responseType)
+                .flatMap(mapFunction);
+    }
+
+    public <RES> Mono<RES> postWithErrorHandlingAndFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType, Predicate<HttpStatusCode> statusError, Function<ClientResponse, Mono<? extends Throwable>> errorHandler, Function<RES, Mono<RES>> mapFunction) {
+        return webClient.post()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .retrieve()
+                .onStatus(statusError, errorHandler)
+                .bodyToMono(responseType)
+                .flatMap(mapFunction);
+    }
+
+    public <RES> Mono<RES> postWithErrorHandlingAndFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Function<RES, Mono<RES>> mapFunction) {
+        return webClient.post()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .exchangeToMono(responseHandler)
+                .flatMap(mapFunction);
+    }
+
+    public <RES> Mono<RES> postWithErrorHandlingAndFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Consumer<? super RES> onSuccess, Consumer<? super Throwable> onError, Function<RES, Mono<RES>> mapFunction) {
+        return webClient.post()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .exchangeToMono(responseHandler)
+                .doOnSuccess(onSuccess)
+                .doOnError(onError)
+                .flatMap(mapFunction);
+    }
+
+    public <RES> Mono<RES> putWithFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType, Function<RES, Mono<RES>> mapFunction) {
+        return webClient.put()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(responseType)
+                .flatMap(mapFunction);
+    }
+
+    public <RES> Mono<RES> putWithErrorHandlingAndFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType, Predicate<HttpStatusCode> statusError, Function<ClientResponse, Mono<? extends Throwable>> errorHandler, Function<RES, Mono<RES>> mapFunction) {
+        return webClient.put()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .retrieve()
+                .onStatus(statusError, errorHandler)
+                .bodyToMono(responseType)
+                .flatMap(mapFunction);
+    }
+
+    public <RES> Mono<RES> putWithErrorHandlingAndFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Function<RES, Mono<RES>> mapFunction) {
+        return webClient.put()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
+                .exchangeToMono(responseHandler)
+                .flatMap(mapFunction);
+    }
+
+    public <RES> Mono<RES> putWithErrorHandlingAndFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Consumer<? super RES> onSuccess, Consumer<? super Throwable> onError, Function<RES, Mono<RES>> mapFunction) {
+        return webClient.put()
+                .uri(uri)
+                .headers(httpHeaders -> headers.forEach(httpHeaders::set))
+                .accept(mediaType)
+                .bodyValue(request)
                 .exchangeToMono(responseHandler)
                 .doOnSuccess(onSuccess)
                 .doOnError(onError)
