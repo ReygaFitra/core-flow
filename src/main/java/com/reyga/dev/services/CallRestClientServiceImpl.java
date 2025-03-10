@@ -1,24 +1,25 @@
-package com.reyga.dev.utils;
+package com.reyga.dev.services;
 
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.util.Map;
 import java.util.function.Predicate;
 
-@Component
-public class CallRestClientUtil {
+@Service
+public class CallRestClientServiceImpl implements CallRestClientService {
 
     private final HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory;
 
-    public CallRestClientUtil(HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory) {
+    public CallRestClientServiceImpl(HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory) {
         this.httpComponentsClientHttpRequestFactory = httpComponentsClientHttpRequestFactory;
     }
 
+    @Override
     public <RES> RES get(String uri, MediaType mediaType, Class<RES> responseType) {
         RestClient client = RestClient
                 .builder()
@@ -31,6 +32,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
+    @Override
     public <RES> RES getWithErrorHandling(String uri, MediaType mediaType, Class<RES> responseType, Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
         RestClient client = RestClient
                 .builder()
@@ -44,6 +46,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
+    @Override
     public <RES> RES getWithErrorHandling(String uri, MediaType mediaType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
         RestClient client = RestClient
                 .builder()
@@ -55,6 +58,7 @@ public class CallRestClientUtil {
                 .exchange(fullResponseHandler);
     }
 
+    @Override
     public <RES> RES post(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType, Class<RES> responseType) {
         RestClient client = RestClient
                 .builder()
@@ -69,6 +73,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
+    @Override
     public <RES> RES postWithErrorHandling(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType, Class<RES> responseType,
                                           Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
         RestClient client = RestClient
@@ -85,6 +90,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
+    @Override
     public <RES> RES postWithErrorHandling(String uri, MediaType contentType, MediaType acceptMediaType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
         RestClient client = RestClient
                 .builder()
@@ -97,6 +103,7 @@ public class CallRestClientUtil {
                 .exchange(fullResponseHandler);
     }
 
+    @Override
     public <RES> RES put(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType, Class<RES> responseType) {
         RestClient client = RestClient
                 .builder()
@@ -111,6 +118,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
+    @Override
     public <RES> RES putWithErrorHandling(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType, Class<RES> responseType,
                                            Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
         RestClient client = RestClient
@@ -127,6 +135,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
+    @Override
     public <RES> RES putWithErrorHandling(String uri, MediaType contentType, MediaType acceptMediaType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
         RestClient client = RestClient
                 .builder()
@@ -139,6 +148,7 @@ public class CallRestClientUtil {
                 .exchange(fullResponseHandler);
     }
 
+    @Override
     public <RES> RES delete(String uri, MediaType mediaType, Class<RES> responseType) {
         RestClient client = RestClient
                 .builder()
@@ -151,6 +161,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
+    @Override
     public <RES> RES deleteWithErrorHandling(String uri, MediaType mediaType, Class<RES> responseType, Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
         RestClient client = RestClient
                 .builder()
@@ -164,6 +175,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
+    @Override
     public <RES> RES deleteWithErrorHandling(String uri, MediaType mediaType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
         RestClient client = RestClient
                 .builder()
@@ -179,6 +191,7 @@ public class CallRestClientUtil {
      * Using RestClient toBodilessEntity.
      */
 
+    @Override
     public ResponseEntity<Void> getWithBodilessEntity(String uri, MediaType mediaType) {
         RestClient client = RestClient
                 .builder()
@@ -191,6 +204,7 @@ public class CallRestClientUtil {
                 .toBodilessEntity();
     }
 
+    @Override
     public ResponseEntity<Void> getWithErrorHandlingBodilessEntity(String uri, MediaType mediaType, Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
         RestClient client = RestClient
                 .builder()
@@ -204,6 +218,7 @@ public class CallRestClientUtil {
                 .toBodilessEntity();
     }
 
+    @Override
     public ResponseEntity<Void> postWithBodilessEntity(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType) {
         RestClient client = RestClient
                 .builder()
@@ -218,6 +233,7 @@ public class CallRestClientUtil {
                 .toBodilessEntity();
     }
 
+    @Override
     public ResponseEntity<Void> postWithErrorHandlingBodilessEntity(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType,
                                            Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
         RestClient client = RestClient
@@ -234,6 +250,7 @@ public class CallRestClientUtil {
                 .toBodilessEntity();
     }
 
+    @Override
     public ResponseEntity<Void> putBodilessEntity(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType) {
         RestClient client = RestClient
                 .builder()
@@ -248,6 +265,7 @@ public class CallRestClientUtil {
                 .toBodilessEntity();
     }
 
+    @Override
     public ResponseEntity<Void> putWithErrorHandlingBodilessEntity(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType,
                                           Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
         RestClient client = RestClient
@@ -264,6 +282,7 @@ public class CallRestClientUtil {
                 .toBodilessEntity();
     }
 
+    @Override
     public ResponseEntity<Void> deleteBodilessEntity(String uri, MediaType mediaType) {
         RestClient client = RestClient
                 .builder()
@@ -276,6 +295,7 @@ public class CallRestClientUtil {
                 .toBodilessEntity();
     }
 
+    @Override
     public ResponseEntity<Void> deleteWithErrorHandlingBodilessEntity(String uri, MediaType mediaType, Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
         RestClient client = RestClient
                 .builder()
@@ -293,6 +313,7 @@ public class CallRestClientUtil {
      * Using RestClient Headers.
      */
 
+    @Override
     public <RES> RES get(String uri, MediaType mediaType, Class<RES> responseType, Map<String, String> headers) {
         RestClient client = RestClient
                 .builder()
@@ -306,6 +327,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
+    @Override
     public <RES> RES post(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType, Class<RES> responseType, Map<String, String> headers) {
         RestClient client = RestClient
                 .builder()
@@ -321,6 +343,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
+    @Override
     public <RES> RES put(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType, Class<RES> responseType, Map<String, String> headers) {
         RestClient client = RestClient
                 .builder()
@@ -336,6 +359,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
+    @Override
     public <RES> RES delete(String uri, MediaType mediaType, Class<RES> responseType, Map<String, String> headers) {
         RestClient client = RestClient
                 .builder()
@@ -349,6 +373,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
+    @Override
     public ResponseEntity<Void> getWithBodilessEntity(String uri, MediaType mediaType, Map<String, String> headers) {
         RestClient client = RestClient
                 .builder()
@@ -362,6 +387,7 @@ public class CallRestClientUtil {
                 .toBodilessEntity();
     }
 
+    @Override
     public ResponseEntity<Void> postWithBodilessEntity(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType, Map<String, String> headers) {
         RestClient client = RestClient
                 .builder()
@@ -377,6 +403,7 @@ public class CallRestClientUtil {
                 .toBodilessEntity();
     }
 
+    @Override
     public ResponseEntity<Void> putWithBodilessEntity(String uri, MediaType contentType, MediaType acceptMediaType, Object requestType, Map<String, String> headers) {
         RestClient client = RestClient
                 .builder()
@@ -392,6 +419,7 @@ public class CallRestClientUtil {
                 .toBodilessEntity();
     }
 
+    @Override
     public ResponseEntity<Void> deleteWithBodilessEntity(String uri, MediaType mediaType, Map<String, String> headers) {
         RestClient client = RestClient
                 .builder()
@@ -405,6 +433,7 @@ public class CallRestClientUtil {
                 .toBodilessEntity();
     }
 
+    @Override
     public <RES> RES getWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
         RestClient client = RestClient
                 .builder()
@@ -419,6 +448,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
+    @Override
     public <RES> RES getWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
         RestClient client = RestClient
                 .builder()
@@ -430,6 +460,8 @@ public class CallRestClientUtil {
                 .accept(mediaType)
                 .exchange(fullResponseHandler);
     }
+
+    @Override
     public <RES> RES postWithErrorHandling(String uri, Map<String, String> headers, MediaType contentType, MediaType acceptMediaType, Object requestType, Class<RES> responseType,
                                            Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
         RestClient client = RestClient
@@ -447,6 +479,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
+    @Override
     public <RES> RES postWithErrorHandling(String uri, Map<String, String> headers, MediaType contentType, MediaType acceptMediaType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
         RestClient client = RestClient
                 .builder()
@@ -459,6 +492,8 @@ public class CallRestClientUtil {
                 .accept(acceptMediaType)
                 .exchange(fullResponseHandler);
     }
+
+    @Override
     public <RES> RES putWithErrorHandling(String uri, Map<String, String> headers, MediaType contentType, MediaType acceptMediaType, Object requestType, Class<RES> responseType,
                                           Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
         RestClient client = RestClient
@@ -476,6 +511,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
+    @Override
     public <RES> RES putWithErrorHandling(String uri, Map<String, String> headers, MediaType contentType, MediaType acceptMediaType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
         RestClient client = RestClient
                 .builder()
@@ -488,6 +524,8 @@ public class CallRestClientUtil {
                 .accept(acceptMediaType)
                 .exchange(fullResponseHandler);
     }
+
+    @Override
     public <RES> RES deleteWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, Predicate<HttpStatusCode> statusError, RestClient.ResponseSpec.ErrorHandler errorHandler) {
         RestClient client = RestClient
                 .builder()
@@ -502,6 +540,7 @@ public class CallRestClientUtil {
                 .body(responseType);
     }
 
+    @Override
     public <RES> RES deleteWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, RestClient.RequestHeadersSpec.ExchangeFunction<RES> fullResponseHandler) {
         RestClient client = RestClient
                 .builder()

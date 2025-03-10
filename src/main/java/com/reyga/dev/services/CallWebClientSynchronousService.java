@@ -1,0 +1,62 @@
+package com.reyga.dev.services;
+
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import reactor.core.publisher.Mono;
+
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+public interface CallWebClientSynchronousService {
+    <RES> RES get(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType);
+    <RES> RES getWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, Predicate<HttpStatusCode> statusError, Function<ClientResponse, Mono<? extends Throwable>> errorHandler);
+    <RES> RES getWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Function<ClientResponse, ? extends Mono<RES>> responseHandler);
+    <RES> RES getWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Consumer<? super RES> onSuccess, Consumer<? super Throwable> onError);
+    <RES> RES delete(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType);
+    <RES> RES deleteWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, Predicate<HttpStatusCode> statusError, Function<ClientResponse, Mono<? extends Throwable>> errorHandler);
+    <RES> RES deleteWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Function<ClientResponse, ? extends Mono<RES>> responseHandler);
+    <RES> RES deleteWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Consumer<? super RES> onSuccess, Consumer<? super Throwable> onError);
+    <RES> RES post(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType);
+    <RES> RES postWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType, Predicate<HttpStatusCode> statusError, Function<ClientResponse, Mono<? extends Throwable>> errorHandler);
+    <RES> RES postWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler);
+    <RES> RES postWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Consumer<? super RES> onSuccess, Consumer<? super Throwable> onError);
+    <RES> RES put(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType);
+    <RES> RES putWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType, Predicate<HttpStatusCode> statusError, Function<ClientResponse, Mono<? extends Throwable>> errorHandler);
+    <RES> RES putWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler);
+    <RES> RES putWithErrorHandling(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Consumer<? super RES> onSuccess, Consumer<? super Throwable> onError);
+    <RES> RES getWithMap(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, Function<RES, RES> mapFunction);
+    <RES> RES getWithErrorHandlingAndMap(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, Predicate<HttpStatusCode> statusError, Function<ClientResponse, Mono<? extends Throwable>> errorHandler, Function<RES, RES> mapFunction);
+    <RES> RES getWithErrorHandlingAndMap(String uri, Map<String, String> headers, MediaType mediaType, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Function<RES, RES> mapFunction);
+    <RES> RES getWithErrorHandlingAndMap(String uri, Map<String, String> headers, MediaType mediaType, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Consumer<? super RES> onSuccess, Consumer<? super Throwable> onError, Function<RES, RES> mapFunction);
+    <RES> RES deleteWithMap(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, Function<RES, RES> mapFunction);
+    <RES> RES deleteWithErrorHandlingAndMap(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, Predicate<HttpStatusCode> statusError, Function<ClientResponse, Mono<? extends Throwable>> errorHandler, Function<RES, RES> mapFunction);
+    <RES> RES deleteWithErrorHandlingAndMap(String uri, Map<String, String> headers, MediaType mediaType, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Function<RES, RES> mapFunction);
+    <RES> RES deleteWithErrorHandlingAndMap(String uri, Map<String, String> headers, MediaType mediaType, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Consumer<? super RES> onSuccess, Consumer<? super Throwable> onError, Function<RES, RES> mapFunction);
+    <RES> RES postWithMap(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, Function<RES, RES> mapFunction);
+    <RES> RES postWithErrorHandlingAndMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType, Predicate<HttpStatusCode> statusError, Function<ClientResponse, Mono<? extends Throwable>> errorHandler, Function<RES, RES> mapFunction);
+    <RES> RES postWithErrorHandlingAndMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Function<RES, RES> mapFunction);
+    <RES> RES postWithErrorHandlingAndMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Consumer<? super RES> onSuccess, Consumer<? super Throwable> onError, Function<RES, RES> mapFunction);
+    <RES> RES putWithMap(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, Function<RES, RES> mapFunction);
+    <RES> RES putWithErrorHandlingAndMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType, Predicate<HttpStatusCode> statusError, Function<ClientResponse, Mono<? extends Throwable>> errorHandler, Function<RES, RES> mapFunction);
+    <RES> RES putWithErrorHandlingAndMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Function<RES, RES> mapFunction);
+    <RES> RES putWithErrorHandlingAndMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Consumer<? super RES> onSuccess, Consumer<? super Throwable> onError, Function<RES, RES> mapFunction);
+    <RES> RES getWithFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, Function<RES, Mono<RES>> mapFunction);
+    <RES> RES getWithErrorHandlingAndFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, Predicate<HttpStatusCode> statusError, Function<ClientResponse, Mono<? extends Throwable>> errorHandler, Function<RES, Mono<RES>> mapFunction);
+    <RES> RES getWithErrorHandlingAndFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Function<RES, Mono<RES>> mapFunction);
+    <RES> RES getWithErrorHandlingAndFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Consumer<? super RES> onSuccess, Consumer<? super Throwable> onError, Function<RES, Mono<RES>> mapFunction);
+    <RES> RES deleteWithFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, Function<RES, Mono<RES>> mapFunction);
+    <RES> RES deleteWithErrorHandlingAndFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Class<RES> responseType, Predicate<HttpStatusCode> statusError, Function<ClientResponse, Mono<? extends Throwable>> errorHandler, Function<RES, Mono<RES>> mapFunction);
+    <RES> RES deleteWithErrorHandlingAndFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Function<RES, Mono<RES>> mapFunction);
+    <RES> RES deleteWithErrorHandlingAndFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Consumer<? super RES> onSuccess, Consumer<? super Throwable> onError, Function<RES, Mono<RES>> mapFunction);
+    <RES> RES postWithFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType, Function<RES, Mono<RES>> mapFunction);
+    <RES> RES postWithErrorHandlingAndFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType, Predicate<HttpStatusCode> statusError, Function<ClientResponse, Mono<? extends Throwable>> errorHandler, Function<RES, Mono<RES>> mapFunction);
+    <RES> RES postWithErrorHandlingAndFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Function<RES, Mono<RES>> mapFunction);
+    <RES> RES postWithErrorHandlingAndFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Consumer<? super RES> onSuccess, Consumer<? super Throwable> onError, Function<RES, Mono<RES>> mapFunction);
+    <RES> RES putWithFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType, Function<RES, Mono<RES>> mapFunction);
+    <RES> RES putWithErrorHandlingAndFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Class<RES> responseType, Predicate<HttpStatusCode> statusError, Function<ClientResponse, Mono<? extends Throwable>> errorHandler, Function<RES, Mono<RES>> mapFunction);
+    <RES> RES putWithErrorHandlingAndFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Function<RES, Mono<RES>> mapFunction);
+    <RES> RES putWithErrorHandlingAndFlatMap(String uri, Map<String, String> headers, MediaType mediaType, Object request, Function<ClientResponse, ? extends Mono<RES>> responseHandler, Consumer<? super RES> onSuccess, Consumer<? super Throwable> onError, Function<RES, Mono<RES>> mapFunction);
+}
