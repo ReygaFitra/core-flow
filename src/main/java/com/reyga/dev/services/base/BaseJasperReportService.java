@@ -25,7 +25,7 @@ public abstract class BaseJasperReportService<RES, CONTENT> {
 
         try {
 
-            generateReportProcess(templatePath, outputPath, setFileName, reportParameters, dataList);
+            generateReportProcess(templatePath, outputPath, setFileName, reportParameters, dataList, reportType);
 
             constructedContentDto = exportReportProcess(reportType, preProcessWithGeneratedId);
 
@@ -43,7 +43,7 @@ public abstract class BaseJasperReportService<RES, CONTENT> {
 
     protected abstract String preProcessOrGenerateId();
 
-    protected abstract <DATA> void generateReportProcess(String templatePath, String outputPath, String setFileName, Map<String, Object> reportParameters, List<DATA> dataList);
+    protected abstract <DATA> void generateReportProcess(String templatePath, String outputPath, String setFileName, Map<String, Object> reportParameters, List<DATA> dataList, String reportType);
 
     protected abstract CONTENT exportReportProcess(String reportType, String id);
 
