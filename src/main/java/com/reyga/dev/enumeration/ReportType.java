@@ -6,6 +6,7 @@ public enum ReportType {
     HTML("html"),
     XML("xml"),
     DOC("doc"),
+    DOCX("docx"),
     PDF("pdf");
 
     private final String type;
