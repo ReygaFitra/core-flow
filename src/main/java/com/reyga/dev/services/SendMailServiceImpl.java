@@ -3,27 +3,27 @@ package com.reyga.dev.services;
 import com.reyga.dev.dto.content.SendMailContentDto;
 import com.reyga.dev.dto.responses.MailResponse;
 import com.reyga.dev.exceptions.AppFaultException;
-import com.reyga.dev.utils.CommonLogger;
-import com.reyga.dev.utils.DateUtil;
+import com.reyga.dev.services.base.BaseSendMailService;
 import jakarta.mail.MessagingException;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.InputStreamResource;
+import jakarta.mail.util.ByteArrayDataSource;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.stereotype.Service;
 
-import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class SendMailServiceImpl implements SendMailService {
+@Service
+public class SendMailServiceImpl extends BaseSendMailService<MailResponse, SendMailContentDto> implements SendMailService {
 
     private final JavaMailSender mailSender;
-    private final CommonLogger logger = new CommonLogger();
 
     public SendMailServiceImpl(JavaMailSender mailSender) {
         this.mailSender = mailSender;
@@ -31,169 +31,65 @@ public class SendMailServiceImpl implements SendMailService {
 
     @Override
     public MailResponse sendMail(String to, String subject, String MsgBody, String[] cc, String[] bcc) throws AppFaultException {
-        SendMailContentDto contentDto = new SendMailContentDto();
-
-        MimeMessagePreparator preparator = mimeMessage -> {
-            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-            messageHelper.setTo(to);
-            messageHelper.setSubject(subject);
-            messageHelper.setText(MsgBody, true);
-            if (cc != null && cc.length > 0) {
-                messageHelper.setCc(cc);
-            }
-            if (bcc != null && bcc.length > 0) {
-                messageHelper.setBcc(bcc);
-            }
-        };
-
-        try {
-            this.mailSender.send(preparator);
-
-            contentDto.setSuccess(true);
-            contentDto.setSubject(subject);
-            contentDto.setMessage(MsgBody);
-            contentDto.setReceiver(to);
-            contentDto.setCc(cc);
-            contentDto.setBcc(bcc);
-            contentDto.setSendAttachment(false);
-
-        } catch (Exception e) {
-            contentDto.setSuccess(false);
-            if (e instanceof MailException) {
-                logger.exception("Send Mail Service", null, e);
-                throw new AppFaultException("10", "Error While Sending Mail", null, HttpStatus.INTERNAL_SERVER_ERROR);
-            } else {
-                logger.exception("Send Mail Service", "Global Error", e);
-                throw new AppFaultException("99", "GENERAL ERROR", null, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-
-        return MailResponse.Builder.newBuilder()
-                .isSuccess(contentDto.isSuccess())
-                .subject(contentDto.getSubject())
-                .message(contentDto.getMessage())
-                .receiver(contentDto.getReceiver())
-                .cc(contentDto.getCc())
-                .bcc(contentDto.getBcc())
-                .isSendAttachment(contentDto.isSendAttachment())
-                .timestamp(DateUtil.getTimestamp(LocalDateTime.now()))
-                .build();
-    };
-
-    @Override
-    public MailResponse sendMailWithAttachments(String to, String subject, String MsgBody, String[] cc, String[] bcc, List<File> attachments) throws AppFaultException {
-        SendMailContentDto contentDto = new SendMailContentDto();
-
-        MimeMessagePreparator preparator = mimeMessage -> {
-            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-            messageHelper.setTo(to);
-            messageHelper.setSubject(subject);
-            messageHelper.setText(MsgBody, true);
-            if (cc != null && cc.length > 0) {
-                messageHelper.setCc(cc);
-            }
-            if (bcc != null && bcc.length > 0) {
-                messageHelper.setBcc(bcc);
-            }
-            if (attachments != null && !attachments.isEmpty()) {
-                attachments.forEach(attachment -> {
-                    try {
-                        FileSystemResource file = new FileSystemResource(attachment);
-                        messageHelper.addAttachment(attachment.getName(), file);
-                    } catch (MessagingException e) {
-                        logger.error("Error while sending attachment mail : ", e.getMessage());
-                        throw new RuntimeException(e);
-                    }
-                });
-            }
-        };
-
-        try {
-            this.mailSender.send(preparator);
-
-            contentDto.setSuccess(true);
-            contentDto.setSubject(subject);
-            contentDto.setMessage(MsgBody);
-            contentDto.setReceiver(to);
-            contentDto.setCc(cc);
-            contentDto.setBcc(bcc);
-            contentDto.setSendAttachment(true);
-            contentDto.setAttachments(attachments);
-
-        } catch (Exception e) {
-            contentDto.setSuccess(false);
-            if (e instanceof MailException) {
-                logger.exception("Send Mail Service", null, e);
-                throw new AppFaultException("10", "Error While Sending Mail", null, HttpStatus.INTERNAL_SERVER_ERROR);
-            } else {
-                logger.exception("Send Mail Service", "Global Error", e);
-                throw new AppFaultException("99", "GENERAL ERROR", null, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-
-        return MailResponse.Builder.newBuilder()
-                .isSuccess(contentDto.isSuccess())
-                .subject(contentDto.getSubject())
-                .message(contentDto.getMessage())
-                .receiver(contentDto.getReceiver())
-                .cc(contentDto.getCc())
-                .bcc(contentDto.getBcc())
-                .isSendAttachment(contentDto.isSendAttachment())
-                .attachments(contentDto.getAttachments())
-                .timestamp(DateUtil.getTimestamp(LocalDateTime.now()))
-                .build();
+        return this.execute(to, subject, MsgBody, cc, bcc, null);
     }
 
     @Override
     public MailResponse sendMailWithAttachmentsInputStream(String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) throws AppFaultException {
-        SendMailContentDto contentDto = new SendMailContentDto();
+        return this.execute(to, subject, MsgBody, cc, bcc, attachmentsInputStream);
+    }
 
-        MimeMessagePreparator preparator = mimeMessage -> {
-            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-            messageHelper.setTo(to);
-            messageHelper.setSubject(subject);
-            messageHelper.setText(MsgBody, true);
-            if (cc != null && cc.length > 0) {
-                messageHelper.setCc(cc);
-            }
-            if (bcc != null && bcc.length > 0) {
-                messageHelper.setBcc(bcc);
-            }
-            if (attachmentsInputStream != null && !attachmentsInputStream.isEmpty()) {
-                attachmentsInputStream.forEach((fileName, attachment) -> {
-                    try {
-                        messageHelper.addAttachment(fileName, new InputStreamResource(attachment));
-                    } catch (MessagingException e) {
-                        logger.error("Error while sending attachment mail : ", e.getMessage());
-                        throw new RuntimeException(e);
-                    }
-                });
-            }
-        };
+    @Override
+    protected SendMailContentDto preProcess() {
+        return new SendMailContentDto();
+    }
 
-        try {
-            this.mailSender.send(preparator);
+    @Override
+    protected void attachmentsInputStreamProcess(MimeMessageHelper messageHelper, Map<String, InputStream> attachmentsInputStream) {
+        attachmentsInputStream.forEach((fileName, attachment) -> {
+            try {
+                byte[] bytes = attachment.readAllBytes();
+                ByteArrayDataSource dataSource = new ByteArrayDataSource(bytes, "application/octet-stream");
+                messageHelper.addAttachment(fileName, dataSource);
+            } catch (MessagingException e) {
+                logger.error("Error while sending attachment mail : ", e.getMessage());
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
 
-            contentDto.setSuccess(true);
-            contentDto.setSubject(subject);
-            contentDto.setMessage(MsgBody);
-            contentDto.setReceiver(to);
-            contentDto.setCc(cc);
-            contentDto.setBcc(bcc);
+    @Override
+    protected void sendingMailProcess(SendMailContentDto contentDto, MimeMessagePreparator preparator, String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) {
+        mailSender.send(preparator);
+
+        contentDto.setSuccess(true);
+        contentDto.setSubject(subject);
+        contentDto.setMessage(MsgBody);
+        contentDto.setReceiver(to);
+        contentDto.setCc(cc);
+        contentDto.setBcc(bcc);
+
+        if (attachmentsInputStream != null && !attachmentsInputStream.isEmpty())
             contentDto.setSendAttachment(true);
-            contentDto.setAttachmentInputStreams(attachmentsInputStream);
 
-        } catch (Exception e) {
-            contentDto.setSuccess(false);
-            if (e instanceof MailException) {
-                logger.exception("Send Mail Service", null, e);
-                throw new AppFaultException("10", "Error While Sending Mail", null, HttpStatus.INTERNAL_SERVER_ERROR);
-            } else {
-                logger.exception("Send Mail Service", "Global Error", e);
-                throw new AppFaultException("99", "GENERAL ERROR", null, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
+        contentDto.setAttachmentInputStreams(attachmentsInputStream);
+    }
 
+    @Override
+    protected void errorHandlingProcess(SendMailContentDto contentDto, Exception e) throws AppFaultException {
+        contentDto.setSuccess(false);
+        logger.exception("Send Mail Service", e.getMessage(), e);
+
+        throw new AppFaultException("10", "Error While Sending Mail", null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    protected MailResponse responseProcess(SendMailContentDto contentDto) {
+        List<String> attachmentNames = (contentDto.getAttachmentInputStreams() != null)
+                ? new ArrayList<>(contentDto.getAttachmentInputStreams().keySet())
+                : Collections.emptyList();
         return MailResponse.Builder.newBuilder()
                 .isSuccess(contentDto.isSuccess())
                 .subject(contentDto.getSubject())
@@ -202,8 +98,8 @@ public class SendMailServiceImpl implements SendMailService {
                 .cc(contentDto.getCc())
                 .bcc(contentDto.getBcc())
                 .isSendAttachment(contentDto.isSendAttachment())
-                .attachmentInputStreams(contentDto.getAttachmentInputStreams())
-                .timestamp(DateUtil.getTimestamp(LocalDateTime.now()))
+                .attachmentInfo(attachmentNames)
+                .timestamp(new Timestamp(System.currentTimeMillis()))
                 .build();
     }
 }

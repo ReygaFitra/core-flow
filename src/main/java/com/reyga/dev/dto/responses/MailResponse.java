@@ -2,52 +2,49 @@ package com.reyga.dev.dto.responses;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.io.File;
-import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MailResponse {
     private boolean isSuccess;
+    private String sender;
     private String subject;
     private String message;
     private String receiver;
     private String[] cc;
     private String[] bcc;
     private boolean isSendAttachment;
-    private List<File> attachments;
-    private Map<String, InputStream> attachmentInputStreams;
+    private List<String> attachmentInfo;
     private Timestamp timestamp;
 
     public MailResponse() {
     }
 
-    public MailResponse(boolean isSuccess, String subject, String message, String receiver, String[] cc, String[] bcc, boolean isSendAttachment, List<File> attachments, Map<String, InputStream> attachmentInputStreams, Timestamp timestamp) {
+    public MailResponse(boolean isSuccess, String sender, String subject, String message, String receiver, String[] cc, String[] bcc, boolean isSendAttachment, List<String> attachmentInfo, Timestamp timestamp) {
         this.isSuccess = isSuccess;
+        this.sender = sender;
         this.subject = subject;
         this.message = message;
         this.receiver = receiver;
         this.cc = cc;
         this.bcc = bcc;
         this.isSendAttachment = isSendAttachment;
-        this.attachments = attachments;
-        this.attachmentInputStreams = attachmentInputStreams;
+        this.attachmentInfo = attachmentInfo;
         this.timestamp = timestamp;
     }
 
     private MailResponse(Builder builder) {
         setSuccess(builder.isSuccess);
+        setSender(builder.sender);
         setSubject(builder.subject);
         setMessage(builder.message);
         setReceiver(builder.receiver);
         setCc(builder.cc);
         setBcc(builder.bcc);
         setSendAttachment(builder.isSendAttachment);
-        setAttachments(builder.attachments);
-        setAttachmentInputStreams(builder.attachmentInputStreams);
+        setAttachmentInfo(builder.attachmentInfo);
         setTimestamp(builder.timestamp);
     }
 
@@ -57,6 +54,14 @@ public class MailResponse {
 
     public void setSuccess(boolean success) {
         isSuccess = success;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
     public String getSubject() {
@@ -107,20 +112,12 @@ public class MailResponse {
         isSendAttachment = sendAttachment;
     }
 
-    public List<File> getAttachments() {
-        return attachments;
+    public List<String> getAttachmentInfo() {
+        return attachmentInfo;
     }
 
-    public void setAttachments(List<File> attachments) {
-        this.attachments = attachments;
-    }
-
-    public Map<String, InputStream> getAttachmentInputStreams() {
-        return attachmentInputStreams;
-    }
-
-    public void setAttachmentInputStreams(Map<String, InputStream> attachmentInputStreams) {
-        this.attachmentInputStreams = attachmentInputStreams;
+    public void setAttachmentInfo(List<String> attachmentInfo) {
+        this.attachmentInfo = attachmentInfo;
     }
 
     public Timestamp getTimestamp() {
@@ -135,28 +132,28 @@ public class MailResponse {
     public String toString() {
         return "MailResponse{" +
                 "isSuccess=" + isSuccess +
+                ", sender='" + sender + '\'' +
                 ", subject='" + subject + '\'' +
                 ", message='" + message + '\'' +
                 ", receiver='" + receiver + '\'' +
                 ", cc=" + Arrays.toString(cc) +
                 ", bcc=" + Arrays.toString(bcc) +
                 ", isSendAttachment=" + isSendAttachment +
-                ", attachments=" + attachments +
-                ", attachmentInputStreams=" + attachmentInputStreams +
+                ", attachmentInfo=" + attachmentInfo +
                 ", timestamp=" + timestamp +
                 '}';
     }
 
     public static final class Builder {
         private boolean isSuccess;
+        private String sender;
         private String subject;
         private String message;
         private String receiver;
         private String[] cc;
         private String[] bcc;
         private boolean isSendAttachment;
-        private List<File> attachments;
-        private Map<String, InputStream> attachmentInputStreams;
+        private List<String> attachmentInfo;
         private Timestamp timestamp;
 
         private Builder() {
@@ -168,6 +165,11 @@ public class MailResponse {
 
         public Builder isSuccess(boolean val) {
             isSuccess = val;
+            return this;
+        }
+
+        public Builder sender(String val) {
+            sender = val;
             return this;
         }
 
@@ -201,13 +203,8 @@ public class MailResponse {
             return this;
         }
 
-        public Builder attachments(List<File> val) {
-            attachments = val;
-            return this;
-        }
-
-        public Builder attachmentInputStreams(Map<String, InputStream> val) {
-            attachmentInputStreams = val;
+        public Builder attachmentInfo(List<String> val) {
+            attachmentInfo = val;
             return this;
         }
 

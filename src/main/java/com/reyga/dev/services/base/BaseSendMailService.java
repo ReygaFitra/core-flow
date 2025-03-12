@@ -6,16 +6,14 @@ import jakarta.mail.internet.InternetAddress;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 
-import java.io.File;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 
 public abstract class BaseSendMailService<RES, CONTENT> {
 
     protected final CommonLogger logger = new CommonLogger();
 
-    protected RES execute(String to, String subject, String MsgBody, String[] cc, String[] bcc, List<File> attachments, Map<String, InputStream> attachmentsInputStream) throws AppFaultException {
+    protected RES execute(String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) throws AppFaultException {
         CONTENT constructedContentDto = preProcess();
 
         MimeMessagePreparator preparator = mimeMessage -> {
@@ -31,12 +29,6 @@ public abstract class BaseSendMailService<RES, CONTENT> {
                 messageHelper.setBcc(bcc);
             }
 
-            if (attachments != null && !attachments.isEmpty()) {
-
-                attachmentsProcess(messageHelper, attachments);
-
-            }
-
             if (attachmentsInputStream != null && !attachmentsInputStream.isEmpty()) {
 
                 attachmentsInputStreamProcess(messageHelper, attachmentsInputStream);
@@ -46,7 +38,7 @@ public abstract class BaseSendMailService<RES, CONTENT> {
 
         try {
 
-            sendingMailProcess(constructedContentDto, preparator, to, subject, MsgBody, cc, bcc, attachments, attachmentsInputStream);
+            sendingMailProcess(constructedContentDto, preparator, to, subject, MsgBody, cc, bcc, attachmentsInputStream);
 
         } catch (Exception e) {
 
@@ -60,11 +52,10 @@ public abstract class BaseSendMailService<RES, CONTENT> {
 
     protected abstract CONTENT preProcess();
 
-    protected abstract void attachmentsProcess(MimeMessageHelper messageHelper, List<File> attachments);
 
     protected abstract void attachmentsInputStreamProcess(MimeMessageHelper messageHelper, Map<String, InputStream> attachmentsInputStream);
 
-    protected abstract void sendingMailProcess(CONTENT contentDto, MimeMessagePreparator preparator, String to, String subject, String MsgBody, String[] cc, String[] bcc, List<File> attachments, Map<String, InputStream> attachmentsInputStream);
+    protected abstract void sendingMailProcess(CONTENT contentDto, MimeMessagePreparator preparator, String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream);
 
     protected abstract void errorHandlingProcess(CONTENT contentDto, Exception e) throws AppFaultException;
 
