@@ -12,7 +12,6 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MailResponse {
     private boolean isSuccess;
-    private String sender;
     private String subject;
     private String message;
     private String receiver;
@@ -26,9 +25,8 @@ public class MailResponse {
     public MailResponse() {
     }
 
-    public MailResponse(boolean isSuccess, String sender, String subject, String message, String receiver, String[] cc, String[] bcc, boolean isSendAttachment, List<File> attachments, Map<String, InputStream> attachmentInputStreams, Timestamp timestamp) {
+    public MailResponse(boolean isSuccess, String subject, String message, String receiver, String[] cc, String[] bcc, boolean isSendAttachment, List<File> attachments, Map<String, InputStream> attachmentInputStreams, Timestamp timestamp) {
         this.isSuccess = isSuccess;
-        this.sender = sender;
         this.subject = subject;
         this.message = message;
         this.receiver = receiver;
@@ -42,7 +40,6 @@ public class MailResponse {
 
     private MailResponse(Builder builder) {
         setSuccess(builder.isSuccess);
-        setSender(builder.sender);
         setSubject(builder.subject);
         setMessage(builder.message);
         setReceiver(builder.receiver);
@@ -60,14 +57,6 @@ public class MailResponse {
 
     public void setSuccess(boolean success) {
         isSuccess = success;
-    }
-
-    public String getSender() {
-        return sender;
-    }
-
-    public void setSender(String sender) {
-        this.sender = sender;
     }
 
     public String getSubject() {
@@ -146,7 +135,6 @@ public class MailResponse {
     public String toString() {
         return "MailResponse{" +
                 "isSuccess=" + isSuccess +
-                ", sender='" + sender + '\'' +
                 ", subject='" + subject + '\'' +
                 ", message='" + message + '\'' +
                 ", receiver='" + receiver + '\'' +
@@ -161,7 +149,6 @@ public class MailResponse {
 
     public static final class Builder {
         private boolean isSuccess;
-        private String sender;
         private String subject;
         private String message;
         private String receiver;
@@ -181,11 +168,6 @@ public class MailResponse {
 
         public Builder isSuccess(boolean val) {
             isSuccess = val;
-            return this;
-        }
-
-        public Builder sender(String val) {
-            sender = val;
             return this;
         }
 

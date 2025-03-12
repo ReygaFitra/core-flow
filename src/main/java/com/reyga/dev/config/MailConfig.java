@@ -8,6 +8,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+import java.util.Properties;
+
 @Configuration
 @Import(CustomMailConfigProperties.class)
 public class MailConfig {
@@ -17,16 +19,18 @@ public class MailConfig {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(properties.getHost());
         mailSender.setPort(properties.getPort());
+        mailSender.setUsername(properties.getUsername());
+        mailSender.setPassword(properties.getPassword());
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.connectiontimeout", properties.getConnectTimeout());
+        props.put("mail.smtp.timeout", properties.getTimeout());
+        props.put("mail.smtp.writetimeout", properties.getWriteTimeout());
 
         return mailSender;
     }
 
-    @Bean
-    public SimpleMailMessage defaultSimpleMailMessage(CustomMailConfigProperties properties) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(properties.getDefaultSender());
-        message.setSubject(properties.getDefaultSubject());
-        message.setText(properties.getDefaultMessage());
-        return message;
-    }
 }

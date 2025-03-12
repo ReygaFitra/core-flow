@@ -8,7 +8,6 @@ import java.util.Map;
 
 public class SendMailContentDto {
     private boolean isSuccess;
-    private String sender;
     private String subject;
     private String message;
     private String receiver;
@@ -33,14 +32,6 @@ public class SendMailContentDto {
 
     public void setSuccess(boolean success) {
         isSuccess = success;
-    }
-
-    public String getSender() {
-        return sender;
-    }
-
-    public void setSender(String sender) {
-        this.sender = sender;
     }
 
     public String getSubject() {

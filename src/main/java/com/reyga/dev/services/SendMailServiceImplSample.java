@@ -14,13 +14,16 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class SendMailServiceImplSample extends BaseSendMailService<MailResponse, SendMailContentDto> implements SendMailService {
 
     private final JavaMailSender mailSender;
@@ -30,18 +33,18 @@ public class SendMailServiceImplSample extends BaseSendMailService<MailResponse,
     }
 
     @Override
-    public MailResponse sendMail(String from, String to, String subject, String MsgBody, String[] cc, String[] bcc) throws AppFaultException {
-        return this.execute(from, to, subject, MsgBody, cc, bcc, null, null);
+    public MailResponse sendMail(String to, String subject, String MsgBody, String[] cc, String[] bcc) throws AppFaultException {
+        return this.execute(to, subject, MsgBody, cc, bcc, null, null);
     }
 
     @Override
-    public MailResponse sendMailWithAttachments(String from, String to, String subject, String MsgBody, String[] cc, String[] bcc, List<File> attachments) throws AppFaultException {
-        return this.execute(from, to, subject, MsgBody, cc, bcc, attachments, null);
+    public MailResponse sendMailWithAttachments(String to, String subject, String MsgBody, String[] cc, String[] bcc, List<File> attachments) throws AppFaultException {
+        return this.execute(to, subject, MsgBody, cc, bcc, attachments, null);
     }
 
     @Override
-    public MailResponse sendMailWithAttachmentsInputStream(String from, String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) throws AppFaultException {
-        return this.execute(from, to, subject, MsgBody, cc, bcc, null, attachmentsInputStream);
+    public MailResponse sendMailWithAttachmentsInputStream(String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) throws AppFaultException {
+        return this.execute(to, subject, MsgBody, cc, bcc, null, attachmentsInputStream);
     }
 
     @Override
@@ -75,13 +78,12 @@ public class SendMailServiceImplSample extends BaseSendMailService<MailResponse,
     }
 
     @Override
-    protected void sendingMailProcess(SendMailContentDto contentDto, MimeMessagePreparator preparator, String from, String to, String subject, String MsgBody, String[] cc, String[] bcc, List<File> attachments, Map<String, InputStream> attachmentsInputStream) {
+    protected void sendingMailProcess(SendMailContentDto contentDto, MimeMessagePreparator preparator, String to, String subject, String MsgBody, String[] cc, String[] bcc, List<File> attachments, Map<String, InputStream> attachmentsInputStream) {
         mailSender.send(preparator);
         contentDto.setSuccess(true);
-        contentDto.setSender(from);
         contentDto.setSubject(subject);
         contentDto.setMessage(MsgBody);
-        contentDto.setReceiver(from);
+        contentDto.setReceiver(to);
         contentDto.setCc(cc);
         contentDto.setBcc(bcc);
         if ((attachments != null && !attachments.isEmpty()) || (attachmentsInputStream != null && !attachmentsInputStream.isEmpty())) {
@@ -103,7 +105,6 @@ public class SendMailServiceImplSample extends BaseSendMailService<MailResponse,
     protected MailResponse responseProcess(SendMailContentDto contentDto) {
         return MailResponse.Builder.newBuilder()
                 .isSuccess(contentDto.isSuccess())
-                .sender(contentDto.getSender())
                 .subject(contentDto.getSubject())
                 .message(contentDto.getMessage())
                 .receiver(contentDto.getReceiver())
@@ -112,7 +113,7 @@ public class SendMailServiceImplSample extends BaseSendMailService<MailResponse,
                 .isSendAttachment(contentDto.isSendAttachment())
                 .attachments(contentDto.getAttachments())
                 .attachmentInputStreams(contentDto.getAttachmentInputStreams())
-                .timestamp(DateUtil.getTimestamp(LocalDateTime.now()))
+                .timestamp(new Timestamp(System.currentTimeMillis()))
                 .build();
     }
 }

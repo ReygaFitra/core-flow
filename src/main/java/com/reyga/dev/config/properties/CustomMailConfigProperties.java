@@ -6,6 +6,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class CustomMailConfigProperties {
     private String host;
     private int port;
+    private String username;
+    private String password;
+    private String connectTimeout;
+    private String timeout;
+    private String writeTimeout;
     private String defaultSubject;
     private String defaultSender;
     private String defaultMessage;
@@ -61,11 +66,56 @@ public class CustomMailConfigProperties {
         this.defaultMessage = defaultMessage;
     }
 
+    public String getConnectTimeout() {
+        return connectTimeout;
+    }
+
+    public void setConnectTimeout(String connectTimeout) {
+        this.connectTimeout = connectTimeout;
+    }
+
+    public String getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(String timeout) {
+        this.timeout = timeout;
+    }
+
+    public String getWriteTimeout() {
+        return writeTimeout;
+    }
+
+    public void setWriteTimeout(String writeTimeout) {
+        this.writeTimeout = writeTimeout;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "CustomMailConfigProperties{" +
                 "host='" + host + '\'' +
-                ", port='" + port + '\'' +
+                ", port=" + port +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", connectTimeout='" + connectTimeout + '\'' +
+                ", timeout='" + timeout + '\'' +
+                ", writeTimeout='" + writeTimeout + '\'' +
                 ", defaultSubject='" + defaultSubject + '\'' +
                 ", defaultSender='" + defaultSender + '\'' +
                 ", defaultMessage='" + defaultMessage + '\'' +

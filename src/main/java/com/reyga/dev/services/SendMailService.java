@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface SendMailService {
-    MailResponse sendMail(String from, String to, String subject, String MsgBody, String[] cc, String[] bcc) throws AppFaultException;
-    MailResponse sendMailWithAttachments(String from, String to, String subject, String MsgBody, String[] cc, String[] bcc, List<File> attachments) throws AppFaultException;
-    MailResponse sendMailWithAttachmentsInputStream(String from, String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) throws AppFaultException;
+    MailResponse sendMail(String to, String subject, String MsgBody, String[] cc, String[] bcc) throws AppFaultException;
+    MailResponse sendMailWithAttachments(String to, String subject, String MsgBody, String[] cc, String[] bcc, List<File> attachments) throws AppFaultException;
+    MailResponse sendMailWithAttachmentsInputStream(String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) throws AppFaultException;
 }

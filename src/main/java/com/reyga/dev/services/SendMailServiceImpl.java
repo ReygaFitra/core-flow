@@ -30,12 +30,11 @@ public class SendMailServiceImpl implements SendMailService {
     }
 
     @Override
-    public MailResponse sendMail(String from, String to, String subject, String MsgBody, String[] cc, String[] bcc) throws AppFaultException {
+    public MailResponse sendMail(String to, String subject, String MsgBody, String[] cc, String[] bcc) throws AppFaultException {
         SendMailContentDto contentDto = new SendMailContentDto();
 
         MimeMessagePreparator preparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-            messageHelper.setFrom(from);
             messageHelper.setTo(to);
             messageHelper.setSubject(subject);
             messageHelper.setText(MsgBody, true);
@@ -51,10 +50,9 @@ public class SendMailServiceImpl implements SendMailService {
             this.mailSender.send(preparator);
 
             contentDto.setSuccess(true);
-            contentDto.setSender(from);
             contentDto.setSubject(subject);
             contentDto.setMessage(MsgBody);
-            contentDto.setReceiver(from);
+            contentDto.setReceiver(to);
             contentDto.setCc(cc);
             contentDto.setBcc(bcc);
             contentDto.setSendAttachment(false);
@@ -72,7 +70,6 @@ public class SendMailServiceImpl implements SendMailService {
 
         return MailResponse.Builder.newBuilder()
                 .isSuccess(contentDto.isSuccess())
-                .sender(contentDto.getSender())
                 .subject(contentDto.getSubject())
                 .message(contentDto.getMessage())
                 .receiver(contentDto.getReceiver())
@@ -84,12 +81,11 @@ public class SendMailServiceImpl implements SendMailService {
     };
 
     @Override
-    public MailResponse sendMailWithAttachments(String from, String to, String subject, String MsgBody, String[] cc, String[] bcc, List<File> attachments) throws AppFaultException {
+    public MailResponse sendMailWithAttachments(String to, String subject, String MsgBody, String[] cc, String[] bcc, List<File> attachments) throws AppFaultException {
         SendMailContentDto contentDto = new SendMailContentDto();
 
         MimeMessagePreparator preparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-            messageHelper.setFrom(from);
             messageHelper.setTo(to);
             messageHelper.setSubject(subject);
             messageHelper.setText(MsgBody, true);
@@ -116,10 +112,9 @@ public class SendMailServiceImpl implements SendMailService {
             this.mailSender.send(preparator);
 
             contentDto.setSuccess(true);
-            contentDto.setSender(from);
             contentDto.setSubject(subject);
             contentDto.setMessage(MsgBody);
-            contentDto.setReceiver(from);
+            contentDto.setReceiver(to);
             contentDto.setCc(cc);
             contentDto.setBcc(bcc);
             contentDto.setSendAttachment(true);
@@ -138,7 +133,6 @@ public class SendMailServiceImpl implements SendMailService {
 
         return MailResponse.Builder.newBuilder()
                 .isSuccess(contentDto.isSuccess())
-                .sender(contentDto.getSender())
                 .subject(contentDto.getSubject())
                 .message(contentDto.getMessage())
                 .receiver(contentDto.getReceiver())
@@ -151,12 +145,11 @@ public class SendMailServiceImpl implements SendMailService {
     }
 
     @Override
-    public MailResponse sendMailWithAttachmentsInputStream(String from, String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) throws AppFaultException {
+    public MailResponse sendMailWithAttachmentsInputStream(String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) throws AppFaultException {
         SendMailContentDto contentDto = new SendMailContentDto();
 
         MimeMessagePreparator preparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-            messageHelper.setFrom(from);
             messageHelper.setTo(to);
             messageHelper.setSubject(subject);
             messageHelper.setText(MsgBody, true);
@@ -182,10 +175,9 @@ public class SendMailServiceImpl implements SendMailService {
             this.mailSender.send(preparator);
 
             contentDto.setSuccess(true);
-            contentDto.setSender(from);
             contentDto.setSubject(subject);
             contentDto.setMessage(MsgBody);
-            contentDto.setReceiver(from);
+            contentDto.setReceiver(to);
             contentDto.setCc(cc);
             contentDto.setBcc(bcc);
             contentDto.setSendAttachment(true);
@@ -204,7 +196,6 @@ public class SendMailServiceImpl implements SendMailService {
 
         return MailResponse.Builder.newBuilder()
                 .isSuccess(contentDto.isSuccess())
-                .sender(contentDto.getSender())
                 .subject(contentDto.getSubject())
                 .message(contentDto.getMessage())
                 .receiver(contentDto.getReceiver())
