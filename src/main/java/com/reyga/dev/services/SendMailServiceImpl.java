@@ -38,7 +38,7 @@ public class SendMailServiceImpl implements SendMailService {
             messageHelper.setFrom(from);
             messageHelper.setTo(to);
             messageHelper.setSubject(subject);
-            messageHelper.setText(MsgBody);
+            messageHelper.setText(MsgBody, true);
             if (cc != null && cc.length > 0) {
                 messageHelper.setCc(cc);
             }
@@ -92,7 +92,7 @@ public class SendMailServiceImpl implements SendMailService {
             messageHelper.setFrom(from);
             messageHelper.setTo(to);
             messageHelper.setSubject(subject);
-            messageHelper.setText(MsgBody);
+            messageHelper.setText(MsgBody, true);
             if (cc != null && cc.length > 0) {
                 messageHelper.setCc(cc);
             }
@@ -122,7 +122,7 @@ public class SendMailServiceImpl implements SendMailService {
             contentDto.setReceiver(from);
             contentDto.setCc(cc);
             contentDto.setBcc(bcc);
-            contentDto.setSendAttachment(false);
+            contentDto.setSendAttachment(true);
             contentDto.setAttachments(attachments);
 
         } catch (Exception e) {
@@ -159,7 +159,7 @@ public class SendMailServiceImpl implements SendMailService {
             messageHelper.setFrom(from);
             messageHelper.setTo(to);
             messageHelper.setSubject(subject);
-            messageHelper.setText(MsgBody);
+            messageHelper.setText(MsgBody, true);
             if (cc != null && cc.length > 0) {
                 messageHelper.setCc(cc);
             }
@@ -188,7 +188,7 @@ public class SendMailServiceImpl implements SendMailService {
             contentDto.setReceiver(from);
             contentDto.setCc(cc);
             contentDto.setBcc(bcc);
-            contentDto.setSendAttachment(false);
+            contentDto.setSendAttachment(true);
             contentDto.setAttachmentInputStreams(attachmentsInputStream);
 
         } catch (Exception e) {

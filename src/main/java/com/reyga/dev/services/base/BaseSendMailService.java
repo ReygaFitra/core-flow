@@ -15,37 +15,38 @@ public abstract class BaseSendMailService<RES, CONTENT> {
     protected final CommonLogger logger = new CommonLogger();
 
     protected RES execute(String from, String to, String subject, String MsgBody, String[] cc, String[] bcc, List<File> attachments, Map<String, InputStream> attachmentsInputStream) throws AppFaultException {
-        CONTENT constructedContentDto;
-
-        constructedContentDto = preProcess();
+        CONTENT constructedContentDto = preProcess();
 
         MimeMessagePreparator preparator = mimeMessage -> {
-            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
             messageHelper.setFrom(from);
             messageHelper.setTo(to);
             messageHelper.setSubject(subject);
-            messageHelper.setText(MsgBody);
+            messageHelper.setText(MsgBody, true);
+
             if (cc != null && cc.length > 0) {
                 messageHelper.setCc(cc);
             }
             if (bcc != null && bcc.length > 0) {
                 messageHelper.setBcc(bcc);
             }
+
             if (attachments != null && !attachments.isEmpty()) {
 
-                attachmentsProcess(messageHelper);
+                attachmentsProcess(messageHelper, attachments);
 
             }
+
             if (attachmentsInputStream != null && !attachmentsInputStream.isEmpty()) {
 
-                attachmentsInputStreamProcess(messageHelper);
+                attachmentsInputStreamProcess(messageHelper, attachmentsInputStream);
 
             }
         };
 
         try {
 
-            sendingMailProcess(constructedContentDto, preparator);
+            sendingMailProcess(constructedContentDto, preparator, from, to, subject, MsgBody, cc, bcc, attachments, attachmentsInputStream);
 
         } catch (Exception e) {
 
@@ -59,13 +60,13 @@ public abstract class BaseSendMailService<RES, CONTENT> {
 
     protected abstract CONTENT preProcess();
 
-    protected abstract void attachmentsProcess(MimeMessageHelper messageHelper);
+    protected abstract void attachmentsProcess(MimeMessageHelper messageHelper, List<File> attachments);
 
-    protected abstract void attachmentsInputStreamProcess(MimeMessageHelper messageHelper);
+    protected abstract void attachmentsInputStreamProcess(MimeMessageHelper messageHelper, Map<String, InputStream> attachmentsInputStream);
 
-    protected abstract void sendingMailProcess(CONTENT contentDto, MimeMessagePreparator preparator);
+    protected abstract void sendingMailProcess(CONTENT contentDto, MimeMessagePreparator preparator, String from, String to, String subject, String MsgBody, String[] cc, String[] bcc, List<File> attachments, Map<String, InputStream> attachmentsInputStream);
 
-    protected abstract void errorHandlingProcess(CONTENT contentDto, Exception e);
+    protected abstract void errorHandlingProcess(CONTENT contentDto, Exception e) throws AppFaultException;
 
     protected abstract RES responseProcess(CONTENT contentDto);
 }
