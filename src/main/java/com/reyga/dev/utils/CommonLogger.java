@@ -18,35 +18,35 @@ public class CommonLogger {
     private static final String DEFAULT_PREFIX_VAR = "[";
     private static final String DEFAULT_SUFFIX_VAR = "]";
 
-    public void info(String message) {
+    public void info(Object message) {
         this.logger.info(getFormattedMessage(message));
     }
 
-    public void info(String key, String... value) {
+    public void info(String key, Object... value) {
         this.logger.info(getFormattedMessage(key, value));
     }
 
-    public void debug(String message) {
+    public void debug(Object message) {
         this.logger.debug(getFormattedMessage(message));
     }
 
-    public void debug(String key, String... value) {
+    public void debug(String key, Object... value) {
         this.logger.debug(getFormattedMessage(key, value));
     }
 
-    public void warn(String message) {
+    public void warn(Object message) {
         this.logger.warn(getFormattedMessage(message));
     }
 
-    public void warn(String key, String... value) {
+    public void warn(String key, Object... value) {
         this.logger.warn(getFormattedMessage(key, value));
     }
 
-    public void error(String message) {
+    public void error(Object message) {
         this.logger.error(getFormattedMessage(message));
     }
 
-    public void error(String key, String... value) {
+    public void error(String key, Object... value) {
         this.logger.error(getFormattedMessage(key, value));
     }
 
@@ -82,7 +82,7 @@ public class CommonLogger {
     }
 
     private String aspectLogFormat(String token, String userName, String reqId, String Method, Integer status, String reqEndpoint,
-                             String ipAddr, String pkg, String error, String request, String response, String userAgent, String respTime) {
+                                   String ipAddr, String pkg, String error, String request, String response, String userAgent, String respTime) {
         return String.format(
                 DEFAULT_PREFIX_VAR + "%s" + DEFAULT_DELIMETER_VAR + "%s" + DEFAULT_DELIMETER_VAR + "%s" + DEFAULT_DELIMETER_VAR
                         + "%s" + DEFAULT_DELIMETER_VAR + "%s" + DEFAULT_DELIMETER_VAR + "%s" + DEFAULT_DELIMETER_VAR
@@ -91,11 +91,11 @@ public class CommonLogger {
                         + DEFAULT_SUFFIX_VAR, token, userName, reqId, Method, status, reqEndpoint, ipAddr, pkg, error, request, response, userAgent, respTime);
     }
 
-    private static String getFormattedMessage(String message) {
+    private static String getFormattedMessage(Object message) {
         return DEFAULT_DELIMETER_VAR + DEFAULT_SPACE_VAR + message + DEFAULT_SPACE_VAR + DEFAULT_DELIMETER_VAR;
     }
 
-    private static String getFormattedMessage(String key, String... value) {
+    private static String getFormattedMessage(String key, Object... value) {
         Map<String, Object> message = new HashMap<>();
         message.put(key, value == null ? "" : value);
         return DEFAULT_DELIMETER_VAR + DEFAULT_SPACE_VAR + message + DEFAULT_SPACE_VAR + DEFAULT_DELIMETER_VAR;

@@ -4,6 +4,7 @@ import com.reyga.dev.dto.content.SendMailContentDto;
 import com.reyga.dev.dto.responses.MailResponse;
 import com.reyga.dev.exceptions.AppFaultException;
 import com.reyga.dev.services.base.BaseSendMailService;
+import com.reyga.dev.utils.CommonLogger;
 import jakarta.mail.MessagingException;
 import jakarta.mail.util.ByteArrayDataSource;
 import org.springframework.http.HttpStatus;
@@ -25,18 +26,19 @@ public class SendMailServiceImpl extends BaseSendMailService<MailResponse, SendM
 
     private final JavaMailSender mailSender;
 
-    public SendMailServiceImpl(JavaMailSender mailSender) {
+    public SendMailServiceImpl(CommonLogger logger, JavaMailSender mailSender) {
+        super(logger);
         this.mailSender = mailSender;
     }
 
     @Override
     public MailResponse sendMail(String to, String subject, String MsgBody, String[] cc, String[] bcc) throws AppFaultException {
-        return this.execute(to, subject, MsgBody, cc, bcc, null);
+        return this.execute(new Object() {}.getClass().getEnclosingMethod().getName(), to, subject, MsgBody, cc, bcc, null);
     }
 
     @Override
     public MailResponse sendMailWithAttachmentsInputStream(String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) throws AppFaultException {
-        return this.execute(to, subject, MsgBody, cc, bcc, attachmentsInputStream);
+        return this.execute(new Object() {}.getClass().getEnclosingMethod().getName(), to, subject, MsgBody, cc, bcc, attachmentsInputStream);
     }
 
     @Override
@@ -61,28 +63,27 @@ public class SendMailServiceImpl extends BaseSendMailService<MailResponse, SendM
     }
 
     @Override
-    protected void sendingMailProcess(SendMailContentDto contentDto, MimeMessagePreparator preparator, String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) {
-        mailSender.send(preparator);
+    protected void sendingMailProcess(SendMailContentDto contentDto, MimeMessagePreparator preparator, String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) throws AppFaultException {
+        try {
+            mailSender.send(preparator);
 
-        contentDto.setSuccess(true);
-        contentDto.setSubject(subject);
-        contentDto.setMessage(MsgBody);
-        contentDto.setReceiver(to);
-        contentDto.setCc(cc);
-        contentDto.setBcc(bcc);
+            contentDto.setSuccess(true);
+            contentDto.setSubject(subject);
+            contentDto.setMessage(MsgBody);
+            contentDto.setReceiver(to);
+            contentDto.setCc(cc);
+            contentDto.setBcc(bcc);
 
-        if (attachmentsInputStream != null && !attachmentsInputStream.isEmpty())
-            contentDto.setSendAttachment(true);
+            if (attachmentsInputStream != null && !attachmentsInputStream.isEmpty())
+                contentDto.setSendAttachment(true);
 
-        contentDto.setAttachmentInputStreams(attachmentsInputStream);
-    }
+            contentDto.setAttachmentInputStreams(attachmentsInputStream);
+        } catch (Exception e) {
+            contentDto.setSuccess(false);
+            logger.exception("Send Mail Service", e.getMessage(), e);
 
-    @Override
-    protected void errorHandlingProcess(SendMailContentDto contentDto, Exception e) throws AppFaultException {
-        contentDto.setSuccess(false);
-        logger.exception("Send Mail Service", e.getMessage(), e);
-
-        throw new AppFaultException("10", "Error While Sending Mail", null, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new AppFaultException("10", "Error While Sending Mail", null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
