@@ -58,7 +58,6 @@ public abstract class BaseSendMailService<RES, CONTENT> extends BaseActivityProc
 
     protected abstract CONTENT preProcess();
 
-
     protected abstract void attachmentsInputStreamProcess(MimeMessageHelper messageHelper, Map<String, InputStream> attachmentsInputStream);
 
     protected abstract void sendingMailProcess(CONTENT contentDto, MimeMessagePreparator preparator, String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) throws AppFaultException;

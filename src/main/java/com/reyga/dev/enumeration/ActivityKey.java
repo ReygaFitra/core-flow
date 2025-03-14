@@ -1,9 +1,10 @@
 package com.reyga.dev.enumeration;
 
 public enum ActivityKey {
+    REQUEST_ID("requestId"),
     PROCESS_ID("processId"),
     SERVICE_NAME("service"),
-    METHOD_NAME("methodName"),;
+    PROCESS_NAME("processName");
 
     private final String keyName;
 
