@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.UUID;
 
-public abstract class BaseSendMailService<RES, CONTENT> extends BaseActivityProcess<RES> {
+public abstract class BaseSendMailService<RES, CONTENT> extends BaseActivityProcess {
 
     private final static String SEND_MAIL_SERVICE = "sendMail";
     private final static String SEND_MAIL_SERVICE_ATTACHMENT_STREAM = "sendMailWithAttachmentsInputStream";

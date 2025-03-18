@@ -5,7 +5,7 @@ import com.reyga.dev.utils.CommonLogger;
 
 import java.util.function.Function;
 
-public abstract class BaseActivityProcess<P> {
+public abstract class BaseActivityProcess {
 
     protected final CommonLogger logger;
 
@@ -13,7 +13,7 @@ public abstract class BaseActivityProcess<P> {
         this.logger = logger;
     }
 
-    protected P process (String id, String serviceName, Function<String, P> process) {
+    protected <P> P process (String id, String serviceName, Function<String, P> process) {
         constructPreActivity(id, serviceName);
         P processActivity = process.apply(id);
         constructPostActivity();
