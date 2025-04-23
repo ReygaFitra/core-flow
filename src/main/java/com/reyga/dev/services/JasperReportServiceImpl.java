@@ -46,8 +46,17 @@ public class JasperReportServiceImpl implements JasperReportService {
             throw new AppFaultException("04", "unsupported file type", "type provided : ".concat(reportType), HttpStatus.BAD_REQUEST);
         }
 
-        try {
-            InputStream fileStream = new ClassPathResource(templatePath).getInputStream();
+        InputStream templateSource;
+        Path path = Paths.get(templatePath);
+
+        try(InputStream newInputStream = Files.newInputStream(path)) {
+            if (Files.exists(path)) {
+                templateSource = newInputStream;
+            } else {
+                templateSource = new ClassPathResource(templatePath).getInputStream();
+            }
+
+            InputStream fileStream = templateSource;
             JasperReport report = JasperCompileManager.compileReport(fileStream);
 
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(dataList);

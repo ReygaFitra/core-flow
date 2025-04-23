@@ -1,5 +1,6 @@
 package com.reyga.dev.utils;
 
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -84,11 +85,10 @@ public class CommonLogger {
     private String aspectLogFormat(String token, String userName, String reqId, String Method, Integer status, String reqEndpoint,
                                    String ipAddr, String pkg, String error, String request, String response, String userAgent, String respTime) {
         return String.format(
-                DEFAULT_PREFIX_VAR + "%s" + DEFAULT_DELIMETER_VAR + "%s" + DEFAULT_DELIMETER_VAR + "%s" + DEFAULT_DELIMETER_VAR
-                        + "%s" + DEFAULT_DELIMETER_VAR + "%s" + DEFAULT_DELIMETER_VAR + "%s" + DEFAULT_DELIMETER_VAR
-                        +"%s" + DEFAULT_DELIMETER_VAR + "%s" + DEFAULT_DELIMETER_VAR + "%s" + DEFAULT_DELIMETER_VAR
-                        + "%s" + DEFAULT_DELIMETER_VAR + "%s" + DEFAULT_DELIMETER_VAR + "%s" + DEFAULT_DELIMETER_VAR + "%s" + DEFAULT_DELIMETER_VAR
-                        + DEFAULT_SUFFIX_VAR, token, userName, reqId, Method, status, reqEndpoint, ipAddr, pkg, error, request, response, userAgent, respTime);
+                DEFAULT_PREFIX_VAR + String.join(
+                        DEFAULT_SPACE_VAR + DEFAULT_DELIMETER_VAR + DEFAULT_SPACE_VAR,
+                        token, userName, reqId, Method, status.toString(), reqEndpoint, ipAddr, pkg, error, request, response, userAgent, respTime
+                ) + DEFAULT_SUFFIX_VAR);
     }
 
     private static String getFormattedMessage(Object message) {

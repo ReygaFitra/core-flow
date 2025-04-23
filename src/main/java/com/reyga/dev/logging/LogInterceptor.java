@@ -7,6 +7,7 @@ import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.MDC;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -27,7 +28,7 @@ public class LogInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
         Map<String, String> headersMap = this.loggingUtil.buildHeadersMap(request);
         headersMap.put(HEADER.REQUEST_ID.getValue(), UUID.randomUUID().toString());
         headersMap.put(HEADER.METHOD.getValue(), request.getMethod());
@@ -42,7 +43,7 @@ public class LogInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, @Nullable Exception ex) throws Exception {
         if (DispatcherType.REQUEST.name().equals(request.getDispatcherType().name()) && handler instanceof HandlerMethod) {
             this.logger.infoAspectLog(
                     MDC.get(HEADER.ACCESS_TOKEN.getValue()), MDC.get(HEADER.USERNAME.getValue()), MDC.get(HEADER.REQUEST_ID.getValue()),

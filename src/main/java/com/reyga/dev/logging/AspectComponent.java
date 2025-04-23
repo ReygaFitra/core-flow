@@ -1,4 +1,4 @@
-package com.reyga.dev.config;
+package com.reyga.dev.logging;
 
 import com.reyga.dev.dto.requests.RequestLoggingDto;
 import com.reyga.dev.enumeration.HEADER;
@@ -22,11 +22,11 @@ import java.util.UUID;
 
 @Aspect
 @Component
-public class AspectConfig {
+public class AspectComponent {
 
     private final CommonLogger logger;
 
-    public AspectConfig(CommonLogger logger) {
+    public AspectComponent(CommonLogger logger) {
         this.logger = logger;
     }
 

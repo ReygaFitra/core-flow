@@ -4,7 +4,9 @@ import com.reyga.dev.dto.content.SendMailContentDto;
 import com.reyga.dev.dto.responses.MailResponse;
 import com.reyga.dev.exceptions.AppFaultException;
 import com.reyga.dev.services.base.BaseSendMailService;
+import com.reyga.dev.utils.ActivityConstruction;
 import com.reyga.dev.utils.CommonLogger;
+import com.reyga.dev.utils.HttpUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.util.ByteArrayDataSource;
 import org.springframework.http.HttpStatus;
@@ -24,31 +26,31 @@ public class SendMailServiceImpl extends BaseSendMailService<MailResponse, SendM
 
     private final JavaMailSender mailSender;
 
-    public SendMailServiceImpl(CommonLogger logger, JavaMailSender mailSender) {
-        super(logger);
+    public SendMailServiceImpl(ActivityConstruction activityConstruction, CommonLogger logger, JavaMailSender mailSender) {
+        super(activityConstruction, logger);
         this.mailSender = mailSender;
     }
 
     @Override
-    public MailResponse sendMail(String to, String subject, String MsgBody, String[] cc, String[] bcc) throws AppFaultException {
-        return this.execute(new Object() {}.getClass().getEnclosingMethod().getName(), to, subject, MsgBody, cc, bcc, null);
+    public MailResponse sendMail(SendMailContentDto contentDto, String to, String subject, String MsgBody, String[] cc, String[] bcc) throws AppFaultException {
+        return this.execute(HttpUtil.getCurrentServiceMethodName(), contentDto, to, subject, MsgBody, cc, bcc, null);
     }
 
     @Override
-    public MailResponse sendMailWithAttachmentsInputStream(String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) throws AppFaultException {
-        return this.execute(new Object() {}.getClass().getEnclosingMethod().getName(), to, subject, MsgBody, cc, bcc, attachmentsInputStream);
+    public MailResponse sendMailWithAttachmentsInputStream(SendMailContentDto contentDto, String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) throws AppFaultException {
+        return this.execute(HttpUtil.getCurrentServiceMethodName(), contentDto, to, subject, MsgBody, cc, bcc, attachmentsInputStream);
     }
 
     @Override
-    protected SendMailContentDto preProcess() {
-        return subProcess(UUID.randomUUID().toString(), new Object() {}.getClass().getEnclosingMethod().getName(), (processId) -> {
-            return new SendMailContentDto();
+    protected SendMailContentDto preProcess(SendMailContentDto contentDto) {
+        return constructSubProcess(contentDto, UUID.randomUUID().toString(), HttpUtil.getCurrentServiceMethodName(), (processId) -> {
+            return contentDto;
         });
     }
 
     @Override
-    protected void attachmentsInputStreamProcess(MimeMessageHelper messageHelper, Map<String, InputStream> attachmentsInputStream) {
-        subProcess(UUID.randomUUID().toString(), new Object() {}.getClass().getEnclosingMethod().getName(), (processId) -> {
+    protected void attachmentsInputStreamProcess(SendMailContentDto contentDto, MimeMessageHelper messageHelper, Map<String, InputStream> attachmentsInputStream) {
+        constructSubProcess(contentDto, UUID.randomUUID().toString(), HttpUtil.getCurrentServiceMethodName(), (processId) -> {
             attachmentsInputStream.forEach((fileName, attachment) -> {
                 try {
                     byte[] bytes = attachment.readAllBytes();
@@ -67,7 +69,7 @@ public class SendMailServiceImpl extends BaseSendMailService<MailResponse, SendM
 
     @Override
     protected void sendingMailProcess(SendMailContentDto contentDto, MimeMessagePreparator preparator, String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) throws AppFaultException {
-        subProcess(UUID.randomUUID().toString(), new Object() {}.getClass().getEnclosingMethod().getName(), (processId) -> {
+        constructSubProcess(contentDto, UUID.randomUUID().toString(), HttpUtil.getCurrentServiceMethodName(), (processId) -> {
             try {
                 mailSender.send(preparator);
 
@@ -98,7 +100,7 @@ public class SendMailServiceImpl extends BaseSendMailService<MailResponse, SendM
 
     @Override
     protected MailResponse responseProcess(SendMailContentDto contentDto) {
-        return subProcess(UUID.randomUUID().toString(), new Object() {}.getClass().getEnclosingMethod().getName(), (processId) -> {
+        return constructSubProcess(contentDto, UUID.randomUUID().toString(), HttpUtil.getCurrentServiceMethodName(), (processId) -> {
             List<String> attachmentNames = (contentDto.getAttachmentInputStreams() != null)
                     ? new ArrayList<>(contentDto.getAttachmentInputStreams().keySet())
                     : Collections.emptyList();

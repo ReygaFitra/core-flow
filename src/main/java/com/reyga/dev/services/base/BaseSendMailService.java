@@ -1,8 +1,9 @@
 package com.reyga.dev.services.base;
 
+import com.reyga.dev.dto.content.base.BaseContentDto;
 import com.reyga.dev.enumeration.ActivityKey;
-import com.reyga.dev.enumeration.ActivityType;
 import com.reyga.dev.exceptions.AppFaultException;
+import com.reyga.dev.utils.ActivityConstruction;
 import com.reyga.dev.utils.CommonLogger;
 import jakarta.mail.internet.InternetAddress;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -12,18 +13,18 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.UUID;
 
-public abstract class BaseSendMailService<RES, CONTENT> extends BaseActivityProcess {
+public abstract class BaseSendMailService<RES, CONTENT extends BaseContentDto> extends BaseActivityProcess<CONTENT> {
 
     private final static String SEND_MAIL_SERVICE = "sendMail";
     private final static String SEND_MAIL_SERVICE_ATTACHMENT_STREAM = "sendMailWithAttachmentsInputStream";
 
-    public BaseSendMailService(CommonLogger logger) {
-        super(logger);
+    public BaseSendMailService(ActivityConstruction activityConstruction, CommonLogger logger) {
+        super(activityConstruction, logger);
     }
 
-    protected RES execute(String serviceName, String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) {
-        return process(UUID.randomUUID().toString(), serviceName, (processId) -> {
-            CONTENT constructedContentDto = preProcess();
+    protected RES execute(String serviceName, CONTENT contentDto, String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) {
+        return construct(contentDto, UUID.randomUUID().toString(), serviceName, (processId) -> {
+            CONTENT constructedContentDto = preProcess(contentDto);
 
             MimeMessagePreparator preparator = mimeMessage -> {
                 MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
@@ -38,9 +39,9 @@ public abstract class BaseSendMailService<RES, CONTENT> extends BaseActivityProc
                     messageHelper.setBcc(bcc);
                 }
 
-                if (SEND_MAIL_SERVICE_ATTACHMENT_STREAM.equals(ActivityType.INSTANCE.getActivityValue(ActivityKey.SERVICE_NAME.getKeyName()))) {
+                if (SEND_MAIL_SERVICE_ATTACHMENT_STREAM.equals(activityConstruction.getActivityValue(constructedContentDto.getActivityLog(), ActivityKey.SERVICE_NAME.getKeyName()))) {
 
-                    attachmentsInputStreamProcess(messageHelper, attachmentsInputStream);
+                    attachmentsInputStreamProcess(constructedContentDto, messageHelper, attachmentsInputStream);
 
                 }
             };
@@ -56,9 +57,9 @@ public abstract class BaseSendMailService<RES, CONTENT> extends BaseActivityProc
 
     }
 
-    protected abstract CONTENT preProcess();
+    protected abstract CONTENT preProcess(CONTENT contentDto);
 
-    protected abstract void attachmentsInputStreamProcess(MimeMessageHelper messageHelper, Map<String, InputStream> attachmentsInputStream);
+    protected abstract void attachmentsInputStreamProcess(CONTENT contentDto, MimeMessageHelper messageHelper, Map<String, InputStream> attachmentsInputStream);
 
     protected abstract void sendingMailProcess(CONTENT contentDto, MimeMessagePreparator preparator, String to, String subject, String MsgBody, String[] cc, String[] bcc, Map<String, InputStream> attachmentsInputStream) throws AppFaultException;
 

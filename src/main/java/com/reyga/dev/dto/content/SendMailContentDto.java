@@ -1,12 +1,14 @@
 package com.reyga.dev.dto.content;
 
+import com.reyga.dev.dto.content.base.BaseContentDto;
+
 import java.io.File;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
-public class SendMailContentDto {
+public class SendMailContentDto extends BaseContentDto {
     private boolean isSuccess;
     private String subject;
     private String message;

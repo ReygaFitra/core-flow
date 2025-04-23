@@ -49,4 +49,9 @@ public class HttpUtil {
 
         return map;
     }
+
+    public static String getCurrentServiceMethodName() {
+        return Thread.currentThread().getStackTrace()[2].getMethodName();
+    }
+
 }
